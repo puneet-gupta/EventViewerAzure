@@ -1,0 +1,77 @@
+﻿/*body {
+    /*background: #525252;
+    margin: 0;
+    padding: 0;
+    text-rendering: optimizeLegibility;
+    font-family: wf_segoe-ui_normal,"Segoe UI","Segoe WP",Tahoma,Arial,sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5em;
+    color: #505050;
+}*/
+
+/*.wa-container {
+    background-color: #fff;
+    margin: 0 auto;
+    min-width: 1200px;
+    /*padding-left: 90px;
+            padding-right: 90px;*/
+    /*padding-top: 88px;
+    width: 1200px;
+}
+
+.logo {
+    background-color: #120101;
+    height: 80px;
+    padding-top: 18px;
+    padding-left: 18px;
+    color: rgb(0, 171, 236);
+    font-family: wf_segoe-ui_normal,"Segoe UI","Segoe WP",Tahoma,Arial,sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+}*/
+
+.selectedEvent {
+    background-color: #f0f0f0;
+}
+
+.EventViewerStyle {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    /*box-shadow: 10px 10px 5px #888888;*/
+    border: 1px solid #000000;
+}
+
+    .EventViewerStyle table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+    }
+
+
+    .EventViewerStyle tr:hover td {
+        background-color: #0094ff;
+    }
+
+    .EventViewerStyle td {
+        vertical-align: middle;
+        border: 1px solid #000000;
+        border-width: 0px 1px 1px 0px;
+        text-align: left;
+        padding: 7px;
+        font-size: 13px;
+        font-family: Arial;
+        font-weight: normal;
+        color: #000000;
+    }
+
+
+#divSingleEvent {
+    border: 1px solid lightgray;
+    padding: 20px;
+    border-radius: 5px;
+}

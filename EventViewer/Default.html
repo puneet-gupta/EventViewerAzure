@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        Azure Website Event Viewer
+    </title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.10.2.min.js"></script>
+    <script>
+    //Fallback to loading JQUERY from local path if CDN is unavailable
+    (window.jQuery || document.write('<script src="/scripts/jquery-1.10.2.js"><\/script>'));
+    </script>
+
+    <link href="styles/StyleSheet.css" rel="stylesheet" />
+    <script src="scripts/knockout-3.2.0.js"></script>
+    <script src="scripts/default.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/" style="color: #f0f0f0; text-shadow: 1px 1px 15px #f0f0f0">Azure Websites Event Viewer</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="Default.html">Home</a></li>
+                    <li><a href="About.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container body-content">
+        <br /><br /><br />
+        <progress id="progressBar" style="width:100vw">
+            loading..
+        </progress>
+
+        <!--<div id="progressBar">Loading...</div>-->
+        <div class="row" id="mainRow">
+            <div class="col-md-9 col-md-push-3">
+                <div class="row">
+                    <div style="overflow: auto; height: 40vh; width: 100%">
+                        <table class="table table-condensed table-hover table-responsive" id="grdEvents">
+                            <thead>
+                                <tr>
+                                    <th scope="col" style="text-align:center">Level</th>
+                                    <th scope="col" style="text-align:center">Date and Time</th>
+                                    <th scope="col" style="text-align:center">Event ID</th>
+                                    <th scope="col" style="text-align:center">Computer</th>
+                                    <th scope="col" style="text-align:center">Source</th>
+
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: serverSideEvents">
+                                <tr>
+                                    <td align="center">
+                                        <img style="height:20px;width:20px" data-bind="attr: {src: ' Images/'+Level+'.bmp'}" />
+                                    </td>
+                                    <td align="center" data-bind="text:DateAndTime"></td>
+                                    <td align="center" data-bind="text:EventID" style="width:150px"></td>
+                                    <td align="center" data-bind="text:Computer"></td>
+                                    <td style="width:250px" align="center">
+                                        <span id="lblSource" data-bind="text:Source"></span>
+                                        <input type="hidden" id="lblDesc" data-bind="html:Description" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <br />
+                    <div id="divSingleEvent">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-md-pull-9">
+                <h4>Sources</h4>
+                <div id="checkBoxlistOfSources" class="checkbox">
+                </div>
+                <hr />
+                <h4>
+                    Level
+                </h4>
+                <div id="checkBoxlistOfLevels" class="checkbox">
+                </div>
+                <hr />
+
+                <h4>
+                    Search
+                </h4>
+                <span class="help-block"> Description </span>
+                <input type="search" id="searchText" class="form-control" />
+              
+                <span class="help-block">
+                    Event Id's (comma seperated)
+                </span>
+                <input type="text" id="txtEventId" class="form-control" />
+                
+                <br />
+                <input id="btnSearch" type="button" value="Apply" />
+                <input id="btnClear" type="button" value="Reset" />
+                <br /> <br />
+                <span id="lblCurrentEventCount"></span>
+                <span id="lblEventCount"></span>&nbsp; Events
+            </div>
+        </div>
+
+        <hr />
+        <footer>
+            <p>&copy; 2014 Puneet and Rakki</p>
+        </footer>
+    </div>
+
+</body>
+
+</html>
