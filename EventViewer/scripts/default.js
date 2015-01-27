@@ -78,39 +78,23 @@ $(document).ready(function () {
                     });
                 });
 
-                // Attach the click event to all the rows
-                $('#grdEvents tr').click(function (event) {
-                    var hiddenText = $('#lblDesc', this).text();
-                    $('#grdEvents tr').each(function (index, element) {
-                        $(this).removeClass('selectedEvent');
-
-                    });
-                    $(this).addClass('selectedEvent');
-                    $('#divSingleEvent').text(hiddenText);
-                    $('#divSingleEvent').show(500);
-                });
-                // Attach the click event to all the rows
-
                 $('#progressBar').hide();               
             }, 1000);
 
             
         });
 
+    });
 
-        // Attach the click event to all the rows
-        $('#grdEvents tr').click(function (event) {
-            var hiddenText = $('#lblDesc', this).text();
-            $('#grdEvents tr').each(function (index, element) {
-                $(this).removeClass('selectedEvent');
-
-            });
-            $(this).addClass('selectedEvent');
-            $('#divSingleEvent').text(hiddenText);
-            $('#divSingleEvent').show(500);
-        });
-        // Attach the click event to all the rows
-
+    // Attach the click event to all the rows
+    $('#grdEvents').on('click', 'tr', function (event) {
+        var tr = $(this);
+        var hiddenText = tr.find('.lblDesc').text();
+        $('#grdEvents tr').removeClass('selectedEvent');
+        tr.addClass('selectedEvent');
+        $('#divSingleEvent')
+            .text(hiddenText)
+            .show(500);
     });
 
 });
@@ -231,22 +215,8 @@ function searchTable(inputVal) {
 
     }
 
-    // Attach the click event to all the rows
-    $('#grdEvents tr').click(function (event) {
-        var hiddenText = $('#lblDesc', this).text();
-        $('#grdEvents tr').each(function (index, element) {
-            $(this).removeClass('selectedEvent');
-
-        });
-        $(this).addClass('selectedEvent');
-        $('#divSingleEvent').text(hiddenText);
-        $('#divSingleEvent').show(500);
-    });
-    // Attach the click event to all the rows
-
     $('#lblCurrentEventCount').text(eventCount + " of ");
     $('#progressBar').hide();
-
     
 }
 
