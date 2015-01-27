@@ -69,9 +69,17 @@
         color: #000000;
     }
 
+#grdEvents tbody td {
+    cursor: default;
+}
 
 #divSingleEvent {
     border: 1px solid lightgray;
+    background: #f5f5f5;
     padding: 20px;
     border-radius: 5px;
+    white-space: pre-wrap;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-size: 12px;
+    tab-size: 4;
 }
