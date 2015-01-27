@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Web;
@@ -225,10 +221,8 @@ namespace EventViewer.Controllers
                 return false;
         }
 
-        public static DataTable GetEvents(out List<string> listSources)
+        public static IEnumerable<ServerSideEvent> GetEvents()
         {
-            listSources = new List<string>();
-
             string eventLogXmlFile = "";
             string aspnet_rcFile = "";
             string pwrshmsgFile = "";
@@ -286,35 +280,19 @@ namespace EventViewer.Controllers
             System.Xml.XmlDocument dom = new System.Xml.XmlDocument();
             dom.Load(eventLogXmlFile);
 
-            System.Data.DataTable tblEvents = new System.Data.DataTable();
-
-            tblEvents.Columns.Add("DateAndTime");
-            tblEvents.Columns.Add("Source");
-            tblEvents.Columns.Add("EventID");
-            tblEvents.Columns.Add("TaskCategory");
-            tblEvents.Columns.Add("Description");
-            tblEvents.Columns.Add("Level");
-            tblEvents.Columns.Add("EventRecordID");
-            tblEvents.Columns.Add("Computer");
-
             System.Xml.XmlNodeList xmlList = dom.SelectNodes("/Events/Event");
 
-            for(int i=(xmlList.Count-1);i>=0;i--)
+            for (int i = (xmlList.Count - 1); i >= 0; i--)
             {
                 XmlNode EventNode = xmlList[i];
                 var node = EventNode.SelectSingleNode("System");
 
                 var EventDataNode = EventNode.SelectSingleNode("EventData");
 
-                System.Data.DataRow dr = tblEvents.NewRow();
+                var evt = new ServerSideEvent();
 
                 string strProvider = node["Provider"].GetAttribute("Name");
-                dr["Source"] = strProvider;
-
-                if (!listSources.Contains(strProvider))
-                {
-                    listSources.Add(strProvider);
-                }
+                evt.Source = strProvider;
 
                 string dateTimeString = node["TimeCreated"].GetAttribute("SystemTime");
 
@@ -327,28 +305,24 @@ namespace EventViewer.Controllers
                     DateTime resultDateTime;
                     if (DateTime.TryParse(dateTimeString, out resultDateTime))
                     {
-                        dr["DateAndTime"] = resultDateTime;
+                        evt.DateAndTime = resultDateTime.ToString();
                         booValidDateFound = true;
                     }
                     else
                     {
                         booValidDateFound = false;
-                        dr["DateAndTime"] = node["TimeCreated"].GetAttribute("SystemTime");
+                        evt.DateAndTime = node["TimeCreated"].GetAttribute("SystemTime");
                     }
 
                 }
                 else
                 {
-
-                    dr["DateAndTime"] = node["TimeCreated"].GetAttribute("SystemTime");
+                    evt.DateAndTime = node["TimeCreated"].GetAttribute("SystemTime");
                 }
-                dr["EventID"] = node["EventID"].InnerText;
-                dr["TaskCategory"] = node["Task"].InnerText;
-                dr["EventRecordID"] = node["EventRecordID"].InnerText;
-                dr["Computer"] = node["Computer"].InnerText;
-                
-
-                string strData = HttpContext.Current.Server.HtmlEncode(EventDataNode.InnerXml);
+                evt.EventID = node["EventID"].InnerText;
+                evt.TaskCategory = node["Task"].InnerText;
+                evt.EventRecordID = node["EventRecordID"].InnerText;
+                evt.Computer = node["Computer"].InnerText;
 
                 List<string> arrayOfdata = new List<string>();
 
@@ -373,78 +347,54 @@ namespace EventViewer.Controllers
                         DateTime parsedDateTime;
                         if (ExtractDateTimeFromFormattedEvent(formatEventMessage, out parsedDateTime))
                         {
-                            dr["DateAndTime"] = parsedDateTime;
+                            evt.DateAndTime = parsedDateTime.ToString();
                         }
                         else
                         {
-                            dr["DateAndTime"] = node["TimeCreated"].GetAttribute("SystemTime");
+                            evt.DateAndTime = node["TimeCreated"].GetAttribute("SystemTime");
                         }
                     }
 
                     if (formatEventMessage.StartsWith("FormatMessage Failed with error"))
                     {
-                        formatEventMessage = "<b>" + formatEventMessage + "</b>\n DLL = " + aspnet_rcFile +  " \n Showing Raw Event\n\n" + EventDataNode.InnerXml;
+                        formatEventMessage = "<b>" + formatEventMessage + "</b>\n DLL = " + aspnet_rcFile + " \n Showing Raw Event\n\n" + EventDataNode.InnerXml;
                     }
-                    
-                    dr["Description"] = formatEventMessage;
+
+                    evt.Description = formatEventMessage;
                 }
                 else if (strProvider.StartsWith("PowerShell"))
                 {
                     string formatEventMessage = "";
                     long longHexEventId = Utils.GenerateHexEventIdFromDecimalEventId(MessageId, strLevel);
                     formatEventMessage = Utils.UnsafeTryFormatMessage(g_hResourcesPowerShell, Convert.ToUInt32(longHexEventId), args);
-                    
+
                     if (formatEventMessage.StartsWith("FormatMessage Failed with error"))
                     {
                         formatEventMessage = "<b>" + formatEventMessage + "</b>\n DLL = " + pwrshmsgFile + " \n Showing Raw Event\n\n" + EventDataNode.InnerXml;
                     }
-                    
-                    dr["Description"] = formatEventMessage;
+
+                    evt.Description = formatEventMessage;
                 }
                 else
                 {
-                    dr["Description"] = string.Join("<br/>", args);
+                    evt.Description = string.Join(Environment.NewLine, args);
                 }
-                dr["Level"] = node["Level"].InnerText;
-                tblEvents.Rows.Add(dr);
+                evt.Level = node["Level"].InnerText;
+
+                yield return evt;
             }
-            return tblEvents;
+            
         }
     }
 
     public class EventsController : ApiController
     {
         // GET: api/Events
-       
+
         public IEnumerable<ServerSideEvent> Get()
         {
-            List<string> listSources;
-            var eventsTable = Utils.GetEvents(out listSources);
-
-            List<ServerSideEvent> events = new List<ServerSideEvent>();
-            
-
-            foreach (DataRow dr in eventsTable.Rows)
-            {
-                ServerSideEvent evt = new ServerSideEvent();
-
-                evt.DateAndTime = dr["DateAndTime"].ToString();
-                evt.Source = dr["Source"].ToString();
-                evt.EventID = dr["EventID"].ToString();
-                evt.TaskCategory = dr["TaskCategory"].ToString();
-                evt.Description = dr["Description"].ToString();
-                evt.Level = dr["Level"].ToString();
-                evt.EventRecordID = dr["EventRecordID"].ToString();
-                evt.Computer = dr["Computer"].ToString();
-                events.Add(evt);
-
-            }
-
-
-            return events;
+            return Utils.GetEvents();
         }
-   
 
-   
     }
 }
