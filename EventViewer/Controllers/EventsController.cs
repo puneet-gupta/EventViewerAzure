@@ -85,9 +85,8 @@ namespace EventViewer.Controllers
 
             if (strDateTime != "")
             {
-                if (DateTime.TryParse(strDateTime, out parsedDateTime))
+                if (DateTime.TryParse(strDateTime, System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None, out parsedDateTime))
                 {
-
                     return true;
                 }
                 else
