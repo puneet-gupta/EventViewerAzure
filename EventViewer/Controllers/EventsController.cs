@@ -229,17 +229,14 @@ namespace EventViewer.Controllers
             if (Utils.IsRunningInMAWS())
             {
                 eventLogXmlFile = Environment.ExpandEnvironmentVariables(@"%HOME%\LogFiles\eventlog.xml");
-                aspnet_rcFile = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Microsoft.NET\Framework64\v4.0.30319\aspnet_rc.dll");
-                pwrshmsgFile = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\system32\WindowsPowerShell\v1.0\pwrshmsg.dll");
-
             }
             else
             {
-                eventLogXmlFile = HttpContext.Current.Server.MapPath("\\App_Data\\eventlog.xml");
-                aspnet_rcFile = @"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\aspnet_rc.dll";
-                pwrshmsgFile = @"C:\Windows\system32\WindowsPowerShell\v1.0\pwrshmsg.dll";
-
+                eventLogXmlFile = HttpContext.Current.Server.MapPath("~/App_Data/eventlog.xml");
             }
+
+            aspnet_rcFile = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Microsoft.NET\Framework64\v4.0.30319\aspnet_rc.dll");
+            pwrshmsgFile = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\system32\WindowsPowerShell\v1.0\pwrshmsg.dll");
 
             IntPtr g_hResourcesASPNET = IntPtr.Zero;
             IntPtr g_hResourcesPowerShell = IntPtr.Zero;
