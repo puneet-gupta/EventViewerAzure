@@ -114,8 +114,9 @@ function addCheckboxSources(name) {
     var inputs = container.find('input');
     var id = inputs.length + 1;
 
-    $('<input />', { type: 'checkbox', id: 'cb' + id, value: name, checked: true }).appendTo(container);
-    $('<label />', { 'for': 'cb' + id, text: name }).appendTo(container);
+    var prefix = 'cbsrc';
+    $('<input />', { type: 'checkbox', id: prefix + id, value: name, checked: true }).appendTo(container);
+    $('<label />', { 'for': prefix + id, text: name }).appendTo(container);
     $('<br />').appendTo(container);
 }
 
@@ -140,8 +141,9 @@ function addCheckboxLevels(name) {
         levelText = "Error";
     }
 
-    $('<input />', { type: 'checkbox', id: 'cb' + id, value: name, checked: true }).appendTo(container);
-    $('<label />', { 'for': 'cb' + id, text: levelText }).appendTo(container);
+    var prefix = 'cblvl';
+    $('<input />', { type: 'checkbox', id: prefix + id, value: name, checked: true }).appendTo(container);
+    $('<label />', { 'for': prefix + id, text: levelText }).appendTo(container);
     $('<br />').appendTo(container);
 }
 
