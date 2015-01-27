@@ -86,7 +86,7 @@ $(document).ready(function () {
 
                     });
                     $(this).addClass('selectedEvent');
-                    $('#divSingleEvent').html(nl2br(hiddenText));
+                    $('#divSingleEvent').text(hiddenText);
                     $('#divSingleEvent').show(500);
                 });
                 // Attach the click event to all the rows
@@ -106,7 +106,7 @@ $(document).ready(function () {
 
             });
             $(this).addClass('selectedEvent');
-            $('#divSingleEvent').html(nl2br(hiddenText));
+            $('#divSingleEvent').text(hiddenText);
             $('#divSingleEvent').show(500);
         });
         // Attach the click event to all the rows
@@ -123,24 +123,6 @@ function GetUrlForService()
 {  
     urltoService = 'api/events';  
     return urltoService;
-}
-
-function nl2br(text) {
-    var nl = '\n';
-    text = unescape(escape(text).replace(/%0A%0A/g, '<br/>'));
-    return text;
-}
-
-function nl2br2(text) {
-    text = escape(text);
-    if (text.indexOf('%0D%0A') > -1) {
-        re_nlchar = /%0D%0A/g;
-    } else if (text.indexOf('%0A') > -1) {
-        re_nlchar = /%0A/g;
-    } else if (text.indexOf('%0D') > -1) {
-        re_nlchar = /%0D/g;
-    }
-    return unescape(text.replace(re_nlchar, '<br />'));
 }
 
 function addCheckboxSources(name) {
@@ -257,7 +239,7 @@ function searchTable(inputVal) {
 
         });
         $(this).addClass('selectedEvent');
-        $('#divSingleEvent').html(nl2br(hiddenText));
+        $('#divSingleEvent').text(hiddenText);
         $('#divSingleEvent').show(500);
     });
     // Attach the click event to all the rows
