@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -272,8 +273,14 @@ namespace EventViewer.Controllers
             g_hResourcesASPNET = Utils.GetMessageResources(aspnet_rcFile);
             g_hResourcesPowerShell = Utils.GetMessageResources(pwrshmsgFile);
 
+            if (!File.Exists(eventLogXmlFile))
+            {
+                yield break;
+            }
 
             System.Xml.XmlDocument dom = new System.Xml.XmlDocument();
+            
+
             dom.Load(eventLogXmlFile);
 
             System.Xml.XmlNodeList xmlList = dom.SelectNodes("/Events/Event");

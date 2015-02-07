@@ -3,86 +3,96 @@ $(document).ready(function () {
 
     var urlString = GetUrlForService();
     mainRow.style.display = "none";
+    errNoEvents.style.display = "none";
+
     $('#divSingleEvent').hide();
     $('#mainRow').hide();
     $.ajax({
         url: urlString,
     }).done(function (res) {
         masterEvents = res;
-        for (var i = 0; i < masterEvents.length; i++) {
 
-            if (jQuery.inArray(masterEvents[i].Source, listOfSources) == -1) {
-                listOfSources.push(masterEvents[i].Source);
-            }
-
-            if (jQuery.inArray(masterEvents[i].Level, listOfLevels) == -1) {
-                listOfLevels.push(masterEvents[i].Level);
-            }
-
-            viewModel.serverSideEvents.push(masterEvents[i]);
-            $('#mainRow').show();
+        if (masterEvents.length == 0) {
             $('#progressBar').hide();
+            $('#errNoEvents').show();
         }
 
+        else {
 
-        listOfSources.forEach(addCheckboxSources);
-        listOfLevels.forEach(addCheckboxLevels);
+            for (var i = 0; i < masterEvents.length; i++) {
 
-        ko.applyBindings(viewModel);
-
-        $('#lblEventCount').text(masterEvents.length);
-
-        $('#btnSearch').click(function () {
-
-            $('#divSingleEvent').hide();
-            $('#progressBar').show();
-
-            setTimeout(function () {
-                searchTable($('#searchText').val());
-            }, 1000);
-
-
-            $('#divSingleEvent').text('');
-                  
-
-        });
-
-        $('#btnClear').click(function () {
-
-            $('#divSingleEvent').hide();
-            $('#progressBar').show();      
-            setTimeout(function ()
-            {
-                //Call this portion of code asynchronously to update the UI
-                viewModel.serverSideEvents.removeAll();
-                for (var i = 0; i < masterEvents.length; i++) {
-                    viewModel.serverSideEvents.push(masterEvents[i]);
+                if (jQuery.inArray(masterEvents[i].Source, listOfSources) == -1) {
+                    listOfSources.push(masterEvents[i].Source);
                 }
 
-                $('#lblCurrentEventCount').text('');
-                $('#txtEventId').val('');
-                $('#searchText').val('');
+                if (jQuery.inArray(masterEvents[i].Level, listOfLevels) == -1) {
+                    listOfLevels.push(masterEvents[i].Level);
+                }
+
+                viewModel.serverSideEvents.push(masterEvents[i]);
+                $('#mainRow').show();
+                $('#progressBar').hide();
+            }
+
+
+            listOfSources.forEach(addCheckboxSources);
+            listOfLevels.forEach(addCheckboxLevels);
+
+            ko.applyBindings(viewModel);
+
+            $('#lblEventCount').text(masterEvents.length);
+
+            $('#btnSearch').click(function () {
+
+                $('#divSingleEvent').hide();
+                $('#progressBar').show();
+
+                setTimeout(function () {
+                    searchTable($('#searchText').val());
+                }, 1000);
+
+
                 $('#divSingleEvent').text('');
 
-                //Select the checkbox controls
-                $('#checkBoxlistOfSources').each(function (index, row) {
-                    var inputCheckBoxElement = $(this).find(':input').each(function (index) {
-                        this.checked = true;
+
+            });
+
+            $('#btnClear').click(function () {
+
+                $('#divSingleEvent').hide();
+                $('#progressBar').show();
+                setTimeout(function () {
+                    //Call this portion of code asynchronously to update the UI
+                    viewModel.serverSideEvents.removeAll();
+                    for (var i = 0; i < masterEvents.length; i++) {
+                        viewModel.serverSideEvents.push(masterEvents[i]);
+                    }
+
+                    $('#lblCurrentEventCount').text('');
+                    $('#txtEventId').val('');
+                    $('#searchText').val('');
+                    $('#divSingleEvent').text('');
+
+                    //Select the checkbox controls
+                    $('#checkBoxlistOfSources').each(function (index, row) {
+                        var inputCheckBoxElement = $(this).find(':input').each(function (index) {
+                            this.checked = true;
+                        });
                     });
-                });
 
 
-                $('#checkBoxlistOfLevels').each(function (index, row) {
-                    var inputCheckBoxElement = $(this).find(':input').each(function (index) {
-                        this.checked = true;
+                    $('#checkBoxlistOfLevels').each(function (index, row) {
+                        var inputCheckBoxElement = $(this).find(':input').each(function (index) {
+                            this.checked = true;
+                        });
                     });
-                });
 
-                $('#progressBar').hide();               
-            }, 1000);
+                    $('#progressBar').hide();
+                }, 1000);
 
-            
-        });
+
+            });
+        }
 
     });
 
